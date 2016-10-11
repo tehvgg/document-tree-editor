@@ -47,6 +47,8 @@ const domNodes = {
 // Element storage for quick access.
 const editor = document.querySelector('#editor');
 const btn = document.querySelector('#save');
+const dropzone = document.querySelector('#dropzone');
+const root = document.querySelector('#root');
 const ntf = document.querySelector('.notification');
 const output = document.querySelector('#output');
 const listEntry = document.querySelector('#listEntry');
@@ -58,6 +60,7 @@ const options = {
 };
 
 // Global application variables.
+let delayUpdate = false;
 let timeout, activeBranch;
 
 /**
@@ -97,7 +100,6 @@ function saveToClipboard () {
  * @returns String
  */
 function treeToString () {
-  let root = document.querySelector('#root');
   let tree = root.value || root.placeholder;
   prefixer(listEntry, 0, function (item, prefix) {
     let input = item.firstElementChild;
@@ -136,16 +138,39 @@ function prefixer (activeList, depth, processor, spacers = []) {
   }
 }
 
+function traverseFileTree (entry, branch) {
+  branch.firstElementChild.value = entry.name;
+  let reader = entry.createReader();
+  reader.readEntries(entries => {
+    for (let i = 0, l = entries.length; i < l; i++) {
+      let item = entries[i];
+      if (item.isDirectory) {
+        traverseFileTree(item, addChild(branch));
+      } else {
+        addChild(branch).firstElementChild.value = item.name;
+      }
+    }
+  }, error => console.error(error));
+}
+
 function parseDroppedFolder (event) {
-	event.preventDefault();
-  let data = event.dataTransfer;
-  let { files, items } = data;
-  console.log(files);
-  console.log(items);
+  event.preventDefault();
+  toggleEditorFade(event);
+  let entry = event.dataTransfer.items[0].webkitGetAsEntry();
+  if (entry.isDirectory) {
+    while (listEntry.children.length) {
+      listEntry.removeChild(listEntry.children[0]);
+    }
+    delayUpdate = true;
+    traverseFileTree(entry, root.parentNode);
+  }
+  delayUpdate = false;
+  update();
 }
 
 function toggleEditorFade (event) {
-	editor.className = event.type === 'dragstart' ? 'fade' : '';
+  !event.defaultPrevented && event.preventDefault();
+	dropzone.className = event.type === 'dragover' ? 'active' : '';
 }
 
 /**
@@ -184,35 +209,41 @@ function hideContextMenu () {
  * Add a sibling branch to the active branch.
  * @method addSibling
  */
-function addSibling () {
-  let ul = activeBranch.parentNode;
+function addSibling (branch = activeBranch) {
+  let ul = branch.parentNode;
   let li = newNode.li;
   li.appendChild(newNode.input);
   ul.appendChild(li);
   update();
+  return li;
 }
 
 /**
  * Add a child branch to the active branch.
  * @method addChild
  */
-function addChild () {
-  let ul = activeBranch.lastElementChild;
+function addChild (branch = activeBranch) {
+  let ul = branch.lastElementChild;
   if (ul.tagName !== 'UL') {
-    activeBranch.appendChild(ul = newNode.ul);
+    branch.appendChild(ul = newNode.ul);
   }
   let li = newNode.li;
   li.appendChild(newNode.input);
   ul.appendChild(li);
   update();
+  return li;
+}
+
+function moveBranch (branch = activeBranch) {
+  // TODO.
 }
 
 /**
  * Delete the active branch and all of its children.
  * @method deleteBranch
  */
-function deleteBranch () {
-  activeBranch.parentNode.removeChild(activeBranch);
+function deleteBranch (branch = activeBranch) {
+  branch.parentNode.removeChild(branch);
   options.el.className = ''; // immediately hide menu.
   update();
 }
@@ -231,6 +262,7 @@ function cancelTimeout () {
  * @method update
  */
 function update () {
+  if (delayUpdate) { return; }
   domNodes.input.forEach(node => {
     if (node.dataset.hasListeners) { return; }
     node.addEventListener('mouseover', positionContextMenu);
@@ -247,8 +279,8 @@ options.el.addEventListener('mouseout', hideContextMenu);
 options.addSibling.addEventListener('click', addSibling);
 options.addChild.addEventListener('click', addChild);
 options.deleteBranch.addEventListener('click', deleteBranch);
-editor.addEventListener('dragenter', toggleEditorFade);
-editor.addEventListener('dragleave', toggleEditorFade);
-editor.addEventListener('drop', parseDroppedFolder);
+dropzone.addEventListener('dragover', toggleEditorFade);
+dropzone.addEventListener('dragleave', toggleEditorFade);
+dropzone.addEventListener('drop', parseDroppedFolder);
 // init
 update();

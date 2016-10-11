@@ -1,12 +1,13 @@
-html {
-  height: 100%;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
   margin: 10px;
   font-family: Helvetica;
   overflow-x: hidden;
-  height: 100%;
 }
 
 h1 {
@@ -20,42 +21,56 @@ h1 {
 
 .instructions {
   margin: 20px 0;
+}
 
-  ul {
-    list-style-type: square;
-  }
+.instructions ul {
+  list-style-type: square;
+}
 
-  li {
-    margin-left: 20px;
-  }
+.instructions li {
+  margin-left: 20px;
 }
 
 #save {
+  display: inline-block;
   background: #333;
   border: none;
   color: white;
   cursor: pointer;
   padding: 10px;
+}
 
-  &:hover {
-    background: #999;
-    color: black;
-  }
+#save:hover {
+  background: #999;
+  color: black;
+}
+
+#dropzone {
+  font-size: 14px;
+  display: inline-block;
+  padding: 6px 50px;
+  border: 2px dashed black;
+  margin-left: 10px;
+}
+
+#dropzone.active {
+  border: 2px solid orange;
+  color: orange;
 }
 
 .notification {
   display: inline-block;
   margin-left: 5px;
+}
 
-  &.success::after {
-    content: 'Saved!';
-    color: green;
-  }
+.success::after {
+  content: 'Saved!';
+  color: green;
+}
 
-  &.failed::after {
-    content: 'Failed!';
-    color: red;
-  }
+.failed::after {
+  content: 'Failed!';
+  color: red;
 }
 
 hr {
@@ -68,60 +83,59 @@ hr {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+}
 
-  &.active {
-    display: block;
-  }
+#options.active {
+  display: block;
+}
 
-  li {
-    padding-right: 5px;
-    float: left;
-    cursor: pointer;
-    color: blue;
+#options ul {
+  list-style-type: none;
+}
 
-    &:not(:first-child)::before {
-      content: '|';
-      color: black;
-      margin-right: 5px;
-    }
+#options li {
+  padding-right: 5px;
+  float: left;
+  cursor: pointer;
+  color: blue;
+}
 
-    &:hover {
-      color: lightblue;
-    }
-  }
+#options li:not(:first-child)::before {
+  content: '|';
+  color: black;
+  margin-right: 5px;
+}
+
+#options li:hover {
+  color: lightblue;
 }
 
 #editor {
-  clear: both;
-  width: 100%;
-  height: 100%;
   margin-left: 15px;
+}
 
-  .fade {
-    opacity: 0.75;
-  }
+#editor ul {
+  list-style-type: none;
+}
 
-  li {
-    &:last-child {
-      margin-bottom: 5px;
-    }
+#editor li:last-child {
+  margin-bottom: 5px;
+}
 
-    &::before {
-      content: attr(data-prefix);
-      margin-right: 2px;
-      font-family: monospace;
-      white-space: pre;
-    }
-  }
+#editor li::before {
+  content: attr(data-prefix);
+  margin-right: 2px;
+  font-family: monospace;
+  white-space: pre;
+}
 
-  input {
-    background: none;
-    border: none;
+#editor input {
+  background: none;
+  border: none;
+}
 
-    &:hover {
-      border: 1px solid blue;
-    }
-  }
+#editor input:hover {
+  border: 1px solid blue;
 }
 
 #listEntry {
