@@ -118,6 +118,15 @@ hr {
   list-style-type: none;
 }
 
+.moving {
+  opacity: 0.75;
+}
+
+#editor input.move-destination {
+  border: none;
+  border-bottom: 1px solid lightblue;
+}
+
 #editor li:last-child {
   margin-bottom: 5px;
 }

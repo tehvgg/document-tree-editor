@@ -56,11 +56,13 @@ const options = {
   el: document.querySelector('#options'),
   addSibling: document.querySelector('.addSibling'),
   addChild: document.querySelector('.addChild'),
+  moveBranch: document.querySelector('.moveBranch'),
   deleteBranch: document.querySelector('.deleteBranch')
 };
 
 // Global application variables.
 let delayUpdate = false;
+let movingBranch = false;
 let timeout, activeBranch;
 
 /**
@@ -177,15 +179,17 @@ function toggleEditorFade (event) {
  * Each time a user hovers an input, display the context menu to the right of the element.
  * @method positionContextMenu
  */
-function positionContextMenu ({ currentTarget }) {
+function positionContextMenu (currentTarget) {
   cancelTimeout();
   activeBranch = currentTarget.parentNode;
   // Don't allow adding siblings or deleting the root.
   if (currentTarget.id === 'root') {
     options.addSibling.style.display = 'none';
+    options.moveBranch.style.display = 'none';
     options.deleteBranch.style.display = 'none';
   } else {
     options.addSibling.style.display = null;
+    options.moveBranch.style.display = null;
     options.deleteBranch.style.display = null;
   }
   let rect = currentTarget.getBoundingClientRect();
@@ -201,15 +205,47 @@ function positionContextMenu ({ currentTarget }) {
 function hideContextMenu () {
   timeout = setTimeout(() => {
     options.el.className = '';
-    activeBranch = undefined;
   }, 1000);
+}
+
+function doMoveBranch ({ currentTarget }) {
+  let dest = currentTarget.parentNode;
+  activeBranch.parentNode.removeChild(activeBranch);
+  let ul = dest.lastElementChild;
+  if (ul.tagName !== 'UL') {
+    dest.appendChild(ul = newNode.ul);
+  }
+  ul.appendChild(activeBranch);
+  movingBranch = false;
+  currentTarget.className = '';
+  activeBranch.className = '';
+  update();
+}
+
+function handleBranchMouseOver ({ currentTarget }) {
+  if (movingBranch) {
+    currentTarget.className = 'move-destination';
+    currentTarget.addEventListener('click', doMoveBranch);
+  } else {
+    positionContextMenu(currentTarget);
+  }
+}
+
+function handleBranchMouseOut ({ currentTarget }) {
+  if (movingBranch) {
+    currentTarget.className = '';
+    currentTarget.removeEventListener('click', doMoveBranch);
+  } else {
+    hideContextMenu();
+  }
 }
 
 /**
  * Add a sibling branch to the active branch.
  * @method addSibling
  */
-function addSibling (branch = activeBranch) {
+function addSibling (branch) {
+  if (branch instanceof MouseEvent) { branch = activeBranch; }
   let ul = branch.parentNode;
   let li = newNode.li;
   li.appendChild(newNode.input);
@@ -222,7 +258,8 @@ function addSibling (branch = activeBranch) {
  * Add a child branch to the active branch.
  * @method addChild
  */
-function addChild (branch = activeBranch) {
+function addChild (branch) {
+  if (branch instanceof MouseEvent) { branch = activeBranch; }
   let ul = branch.lastElementChild;
   if (ul.tagName !== 'UL') {
     branch.appendChild(ul = newNode.ul);
@@ -234,15 +271,19 @@ function addChild (branch = activeBranch) {
   return li;
 }
 
-function moveBranch (branch = activeBranch) {
-  // TODO.
+function moveBranch (branch) {
+  if (branch instanceof MouseEvent) { branch = activeBranch; }
+  movingBranch = true;
+  branch.className = 'moving';
+  removeMenuListeners(branch);
 }
 
 /**
  * Delete the active branch and all of its children.
  * @method deleteBranch
  */
-function deleteBranch (branch = activeBranch) {
+function deleteBranch (branch) {
+  if (branch instanceof MouseEvent) { branch = activeBranch; }
   branch.parentNode.removeChild(branch);
   options.el.className = ''; // immediately hide menu.
   update();
@@ -263,13 +304,38 @@ function cancelTimeout () {
  */
 function update () {
   if (delayUpdate) { return; }
-  domNodes.input.forEach(node => {
+  addMenuListeners();
+  renderEditor();
+}
+
+function addMenuListeners (parent) {
+  let nodes;
+  if (!parent) {
+    nodes = domNodes.input;
+  } else {
+    nodes = nodeListToArray(parent.querySelectorAll('input'));
+  }
+  nodes.forEach(node => {
     if (node.dataset.hasListeners) { return; }
-    node.addEventListener('mouseover', positionContextMenu);
-    node.addEventListener('mouseout', hideContextMenu);
+    node.addEventListener('mouseover', handleBranchMouseOver);
+    node.addEventListener('mouseout', handleBranchMouseOut);
     node.dataset.hasListeners = true;
   });
-  renderEditor();
+}
+
+function removeMenuListeners (parent) {
+  let nodes;
+  if (!parent) {
+    nodes = domNodes.input;
+  } else {
+    nodes = nodeListToArray(parent.querySelectorAll('input'));
+  }
+  nodes.forEach(node => {
+    if (!node.dataset.hasListeners) { return; }
+    node.removeEventListener('mouseover', handleBranchMouseOver);
+    node.removeEventListener('mouseout', handleBranchMouseOut);
+    delete node.dataset.hasListeners;
+  });
 }
 
 // apply event listeners to the save button and context menu
@@ -278,6 +344,7 @@ options.el.addEventListener('mouseover', cancelTimeout);
 options.el.addEventListener('mouseout', hideContextMenu);
 options.addSibling.addEventListener('click', addSibling);
 options.addChild.addEventListener('click', addChild);
+options.moveBranch.addEventListener('click', moveBranch);
 options.deleteBranch.addEventListener('click', deleteBranch);
 dropzone.addEventListener('dragover', toggleEditorFade);
 dropzone.addEventListener('dragleave', toggleEditorFade);
