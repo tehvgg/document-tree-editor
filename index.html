@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <title></title>
+
+</head>
+
+<body>
+  <div id="header">
+    <h1>Document Tree Editor</h1>
+    <p class="description">Create quick and easy document trees.</p>
+    <div class="instructions">
+      <ul>
+        <li>Click an input to modify the name</li>
+        <li>Hover an input to bring up a branch editing menu</li>
+        <li>Deleting a branch will also delete all of its children</li>
+        <li>Cannot add siblings to or delete the Root dir.</li>
+        <li>Drop a folder into the editor to begin editing a file tree. This will erase your current tree!</li>
+      </ul>
+    </div>
+    <button id="save">Save To Clipboard</button>
+    <p class="notification"></p>
+  </div>
+
+  <hr />
+
+  <div id="options">
+    <ul>
+      <li class="addSibling">add sibling</li>
+      <li class="addChild">add child</li>
+      <li class="deleteBranch">delete branch</li>
+    </ul>
+  </div>
+
+  <div id="editor">
+    <ul>
+      <li><input id="root" type="text" placeholder="Root" />
+        <ul id="listEntry">
+          <li><input type="text" placeholder="Directory or File Name" /></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <p id="output"></p>
+</body>
+
+</html>

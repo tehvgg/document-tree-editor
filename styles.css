@@ -1,0 +1,137 @@
+html {
+  height: 100%;
+}
+
+body {
+  margin: 10px;
+  font-family: Helvetica;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 12px;
+}
+
+.instructions {
+  margin: 20px 0;
+
+  ul {
+    list-style-type: square;
+  }
+
+  li {
+    margin-left: 20px;
+  }
+}
+
+#save {
+  background: #333;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+
+  &:hover {
+    background: #999;
+    color: black;
+  }
+}
+
+.notification {
+  display: inline-block;
+  margin-left: 5px;
+
+  &.success::after {
+    content: 'Saved!';
+    color: green;
+  }
+
+  &.failed::after {
+    content: 'Failed!';
+    color: red;
+  }
+}
+
+hr {
+  margin: 20px 0;
+}
+
+#options {
+  position: absolute;
+  display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  &.active {
+    display: block;
+  }
+
+  li {
+    padding-right: 5px;
+    float: left;
+    cursor: pointer;
+    color: blue;
+
+    &:not(:first-child)::before {
+      content: '|';
+      color: black;
+      margin-right: 5px;
+    }
+
+    &:hover {
+      color: lightblue;
+    }
+  }
+}
+
+#editor {
+  clear: both;
+  width: 100%;
+  height: 100%;
+  margin-left: 15px;
+
+  .fade {
+    opacity: 0.75;
+  }
+
+  li {
+    &:last-child {
+      margin-bottom: 5px;
+    }
+
+    &::before {
+      content: attr(data-prefix);
+      margin-right: 2px;
+      font-family: monospace;
+      white-space: pre;
+    }
+  }
+
+  input {
+    background: none;
+    border: none;
+
+    &:hover {
+      border: 1px solid blue;
+    }
+  }
+}
+
+#listEntry {
+  margin-left: 10px;
+}
+
+#output {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  background: blue;
+  white-space: pre;
+}
