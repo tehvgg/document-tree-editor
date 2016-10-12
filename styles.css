@@ -48,32 +48,31 @@ h1 {
 
 #dropzone {
   display: inline-block;
-  border: 2px dashed #581845;
-  color: #581845;
+  background: #DAF7A6;
+  border: 3px dashed black;
   text-align: center;
   width: 100%;
   padding: 50px 0;
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 #dropzone.active {
-  border-color: #FF5733;
-  color: #FF5733;
+  background: #FFC300;
 }
 
 #save {
-  background: #FF5733;
+  background: #2A9BD3;
   color: white;
-  border: none;
   cursor: pointer;
   width: 100%;
   padding: 10px 0;
-  border: 2px solid #581845;
+  border: 1px solid black;
+  text-transform: uppercase;
 }
 
 #save:hover {
   background: #581845;
-  border-color: #FF5733;
 }
 
 .success {
