@@ -502,6 +502,7 @@ function demo () {
   let parent = editor.listEntry.parentNode;
   parent.removeChild(editor.listEntry);
   parent.innerHTML += req.responseText;
+  editor.listEntry = document.querySelector('#listEntry');
   editor.update();
 }
 req.onreadystatechange = function _handleReadyStateChange () {
