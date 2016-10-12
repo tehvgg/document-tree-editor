@@ -58,29 +58,48 @@ h1 {
 }
 
 #dropzone.active {
-  background: #FFC300;
+  background: #63F352;
+}
+
+button {
+  width: 32%;
+  padding: 10px 0;
+  margin-right: 2%;
+  border: 1px solid black;
+  text-transform: uppercase;
+  float: left;
+  cursor: pointer;
+}
+
+button:last-of-type {
+  margin: 0;
+}
+
+button:hover {
+  background: #581845 !important;
 }
 
 #save {
-  background: #2A9BD3;
+  background: #FAB056;
   color: white;
-  cursor: pointer;
-  width: 100%;
-  padding: 10px 0;
-  border: 1px solid black;
-  text-transform: uppercase;
 }
 
-#save:hover {
-  background: #581845;
+#clear {
+  background: #F35952;
+  color: white;
+}
+
+#demo {
+  background: #2A9BD3;
+  color: white;
 }
 
 .success {
-  background: #23992C !important;
+  background: #63F352 !important;
 }
 
 .failed {
-  background: #D32A2A !important;
+  background: #C70039 !important;
 }
 
 #options {

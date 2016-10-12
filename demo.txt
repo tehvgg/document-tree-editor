@@ -1,0 +1,49 @@
+<ul id="listEntry">
+  <li><input type="text" placeholder="Directory or File Name"></li>
+  <li><input type="text" placeholder="Directory or File Name">
+    <ul>
+      <li><input type="text" placeholder="Directory or File Name"></li>
+      <li><input type="text" placeholder="Directory or File Name">
+        <ul>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+        </ul>
+      </li>
+      <li><input type="text" placeholder="Directory or File Name"></li>
+      <li><input type="text" placeholder="Directory or File Name">
+        <ul>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+          <li><input type="text" placeholder="Directory or File Name"></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><input type="text" placeholder="Directory or File Name"></li>
+  <li><input type="text" placeholder="Directory or File Name"></li>
+  <li><input type="text" placeholder="Directory or File Name"></li>
+  <li><input type="text" placeholder="Directory or File Name">
+    <ul>
+      <li><input type="text" placeholder="Directory or File Name"></li>
+      <li><input type="text" placeholder="Directory or File Name">
+        <ul>
+          <li><input type="text" placeholder="Directory or File Name">
+            <ul>
+              <li><input type="text" placeholder="Directory or File Name">
+                <ul>
+                  <li><input type="text" placeholder="Directory or File Name"></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><input type="text" placeholder="Directory or File Name"></li>
+      <li><input type="text" placeholder="Directory or File Name"></li>
+    </ul>
+  </li>
+  <li><input type="text" placeholder="Directory or File Name"></li>
+  <li><input type="text" placeholder="Directory or File Name"></li>
+</ul>

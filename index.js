@@ -229,7 +229,6 @@ const editor = {
   },
   /**
    * Delete the active branch and all of its children.
-   * TODO: Display a confirmation.
    * @method deleteBranch
    */
   deleteBranch (branch) {
@@ -460,9 +459,16 @@ const folder = {
 
 /*************************************************************************
 
-  SAVE TO CLIPBOARD
+  BUTTONS
 
 *************************************************************************/
+
+const saveBtn = document.querySelector('#save');
+const clearBtn = document.querySelector('#clear');
+const demoBtn = document.querySelector('#demo');
+const output = document.querySelector('#output');
+const req = new XMLHttpRequest();
+req.open('GET', 'demo.txt');
 
 /**
  * Saves a string representation of the editor tree to the clipboard.
@@ -482,12 +488,25 @@ function saveToClipboard () {
     saveBtn.className = 'failed';
   }
   // display for 3 seconds
-  setTimeout(() => saveBtn.className = '', 3000);
+  setTimeout(() => saveBtn.className = '', 1500);
   window.getSelection().removeAllRanges();
 }
-const saveBtn = document.querySelector('#save');
-const output = document.querySelector('#output');
 saveBtn.addEventListener('click', saveToClipboard);
+
+function clear () {
+  editor.clear();
+}
+clearBtn.addEventListener('click', clear);
+
+function demo () {
+  let parent = editor.listEntry.parentNode;
+  parent.removeChild(editor.listEntry);
+  parent.innerHTML += req.responseText;
+}
+req.onreadystatechange = function _handleReadyStateChange () {
+  demoBtn.addEventListener('click', demo);
+};
+req.send();
 
 /*************************************************************************
 
