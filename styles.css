@@ -5,9 +5,22 @@
 }
 
 body {
-  margin: 10px;
   font-family: Helvetica;
-  overflow-x: hidden;
+}
+
+#wrapper {
+  width: 1000px;
+  margin: 50px auto;
+}
+
+#header {
+  float: left;
+  width: 100%;
+}
+
+.col {
+  width: 50%;
+  float: left;
 }
 
 h1 {
@@ -21,6 +34,7 @@ h1 {
 
 .instructions {
   margin: 20px 0;
+  font-size: 14px;
 }
 
 .instructions ul {
@@ -28,90 +42,78 @@ h1 {
 }
 
 .instructions li {
-  margin-left: 20px;
-}
-
-#save {
-  display: inline-block;
-  background: #333;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 10px;
-}
-
-#save:hover {
-  background: #999;
-  color: black;
+  margin-left: 15px;
+  padding-right: 50px;
 }
 
 #dropzone {
-  font-size: 14px;
   display: inline-block;
-  padding: 6px 50px;
-  border: 2px dashed black;
-  margin-left: 10px;
+  border: 2px dashed #581845;
+  color: #581845;
+  text-align: center;
+  width: 100%;
+  padding: 50px 0;
+  margin-bottom: 10px;
 }
 
 #dropzone.active {
-  border: 2px solid orange;
-  color: orange;
+  border-color: #FF5733;
+  color: #FF5733;
 }
 
-.notification {
-  display: inline-block;
-  margin-left: 5px;
+#save {
+  background: #FF5733;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 10px 0;
+  border: 2px solid #581845;
 }
 
-.success::after {
-  content: 'Saved!';
-  color: green;
+#save:hover {
+  background: #581845;
+  border-color: #FF5733;
 }
 
-.failed::after {
-  content: 'Failed!';
-  color: red;
+.success {
+  background: #23992C !important;
 }
 
-hr {
-  margin: 20px 0;
+.failed {
+  background: #D32A2A !important;
 }
 
 #options {
-  position: absolute;
-  display: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  margin: 30px 0;
+  width: 100%;
+  float: left;
 }
 
-#options.active {
-  display: block;
+a {
+  text-decoration: none;
 }
 
 #options ul {
   list-style-type: none;
+  position: relative;
+  text-align: center;
 }
 
 #options li {
-  padding-right: 5px;
+  width: 25%;
   float: left;
-  cursor: pointer;
-  color: blue;
 }
 
-#options li:not(:first-child)::before {
-  content: '|';
-  color: black;
-  margin-right: 5px;
-}
-
-#options li:hover {
-  color: lightblue;
+#options li::before {
+  content: attr(data-content);
+  position: absolute;
+  font-size: 12px;
+  top: -12px;
 }
 
 #editor {
-  margin-left: 15px;
+  float: left;
 }
 
 #editor ul {
@@ -119,7 +121,7 @@ hr {
 }
 
 .moving {
-  opacity: 0.75;
+  border: 1px solid blue;
 }
 
 #editor input.move-destination {
@@ -151,10 +153,42 @@ hr {
   margin-left: 10px;
 }
 
+#contextMenu {
+  position: absolute;
+  display: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+#contextMenu.active {
+  display: block;
+}
+
+#contextMenu ul {
+  list-style-type: none;
+}
+
+#contextMenu li {
+  padding-right: 5px;
+  float: left;
+  cursor: pointer;
+  color: blue;
+}
+
+#contextMenu li:not(:first-child)::before {
+  content: '|';
+  color: black;
+  margin-right: 5px;
+}
+
+#contextMenu li:hover {
+  color: lightblue;
+}
+
 #output {
   opacity: 0;
   height: 0;
   width: 0;
-  background: blue;
   white-space: pre;
 }

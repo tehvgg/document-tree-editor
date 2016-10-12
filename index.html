@@ -6,41 +6,55 @@
 </head>
 
 <body>
-  <div id="header">
-    <h1>Document Tree Editor</h1>
-    <p class="description">Create quick and easy document trees.</p>
-    <div class="instructions">
+  <div id="wrapper">
+    <div id="header">
+      <div class="col">
+        <h1>Document Tree Editor</h1>
+        <p class="description">Create quick and easy document trees.</p>
+        <div class="instructions">
+          <ul>
+            <li>Click an input to modify the name.</li>
+            <li>Hover an input to bring up a branch editing menu.</li>
+            <li>Moved branches are appended to an existing sublist.</li>
+            <li>Deleting a branch will also delete all of its children.</li>
+            <li>Cannot add siblings to or delete the Root dir.</li>
+            <li>Drop a folder to begin editing a file tree. This will erase your current tree! Only works in Chrome.</li>
+            <li>This is written in untranspiled ES6. <a id="flags" href="chrome://flags/#enable-javascript-harmony">Turn on experimental JS.</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div id="dropzone">Drop Folders Here</div>
+        <button id="save">Save To Clipboard</button>
+      </div>
+    </div>
+
+    <div id="options">
       <ul>
-        <li>Click an input to modify the name</li>
-        <li>Hover an input to bring up a branch editing menu</li>
-        <li>Deleting a branch will also delete all of its children</li>
-        <li>Cannot add siblings to or delete the Root dir.</li>
-        <li>Drop a folder into the editor to begin editing a file tree. This will erase your current tree!</li>
+        <li data-content="Branch"><input type="text" class="branch" /></li>
+        <li data-content="Branch (Last)"><input type="text" class="branch-last" /></li>
+        <li data-content="Spacer (Branch)"><input type="text" class="spacer-branch" /></li>
+        <li data-content="Spacer (Empty)"><input type="text" class="spacer-empty" /></li>
       </ul>
     </div>
-    <button id="save">Save To Clipboard</button>
-    <div id="dropzone">Drop Folders Here</div>
-    <p class="notification"></p>
+
+    <div id="editor">
+      <ul>
+        <li><input id="root" type="text" placeholder="Root" />
+          <ul id="listEntry">
+            <li><input type="text" placeholder="Directory or File Name" /></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <hr />
-
-  <div id="options">
+  <div id="contextMenu">
     <ul>
-      <li class="addSibling">add sibling</li>
-      <li class="addChild">add child</li>
-      <li class="moveBranch">move branch</li>
-      <li class="deleteBranch">delete branch</li>
-    </ul>
-  </div>
-
-  <div id="editor">
-    <ul>
-      <li><input id="root" type="text" placeholder="Root" />
-        <ul id="listEntry">
-          <li><input type="text" placeholder="Directory or File Name" /></li>
-        </ul>
-      </li>
+      <li class="addChild">+child</li>
+      <li class="addSibling">+sibling</li>
+      <li class="moveBranch">move</li>
+      <li class="deleteBranch">delete</li>
     </ul>
   </div>
 
