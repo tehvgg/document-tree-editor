@@ -225,7 +225,7 @@ const editor = {
     this.inMoveState = true;
     branch.className = 'moving';
     // don't want events for any item inside the moving branch
-    this.removeMenuListeners(branch);
+    this._removeMenuListeners(branch);
   },
   /**
    * Delete the active branch and all of its children.
@@ -286,8 +286,8 @@ const editor = {
    * @method _moveBranch
    * @private
    */
-  _moveBranch (target) {
-    let dest = target.parentNode;
+  _moveBranch ({ currentTarget }) {
+    let dest = currentTarget.parentNode;
     let activeBranch = this.activeBranch;
     activeBranch.parentNode.removeChild(activeBranch);
     let ul = dest.lastElementChild;
@@ -296,7 +296,7 @@ const editor = {
     }
     ul.appendChild(activeBranch);
     this.inMoveState = false;
-    target.className = activeBranch.className = '';
+    currentTarget.parentNode.className = activeBranch.className = '';
     this.update();
   },
   /**
@@ -306,7 +306,7 @@ const editor = {
    */
   _handleBranchMouseOver ({ currentTarget }) {
     if (this.inMoveState) {
-      currentTarget.className = 'move-destination';
+      currentTarget.parentNode.className = 'move-destination';
       currentTarget.addEventListener('click', currentTarget.clickListener = proxy(this._moveBranch, this));
     } else {
       this._positionContextMenu(currentTarget);
@@ -319,7 +319,7 @@ const editor = {
    */
   _handleBranchMouseOut ({ currentTarget }) {
     if (this.inMoveState) {
-      currentTarget.className = '';
+      currentTarget.parentNode.className = '';
       currentTarget.removeEventListener('click', currentTarget.clickListener);
     } else {
       this._hideContextMenu();
@@ -384,18 +384,34 @@ const editor = {
 
 *************************************************************************/
 
+/**
+ * Manage folder drops and subsequent calls to the editor.
+ */
 const folder = {
   dropzone: document.querySelector('#dropzone'),
+  /**
+   * Initialize the component.
+   * @method init
+   */
   init () {
     this.watch();
   },
+  /**
+   * Apply drag and drop related event listeners to the dropzone.
+   * @method watch
+   */
   watch () {
     // drop targets require a dragover and drop event to be considered valid.
     this.dropzone.addEventListener('dragover', proxy(this._toggleHover, this));
     this.dropzone.addEventListener('dragleave', proxy(this._toggleHover, this));
-    this.dropzone.addEventListener('drop', proxy(this._parse, this));
+    this.dropzone.addEventListener('drop', proxy(this._handleDrop, this));
   },
-  _parse (event) {
+  /**
+   * Handle the file drop.
+   * @method _handleDrop
+   * @private
+   */
+  _handleDrop (event) {
     event.preventDefault();
     this._toggleHover(event);
     let entry = event.dataTransfer.items[0].webkitGetAsEntry();
@@ -406,6 +422,11 @@ const folder = {
     editor.delayUpdate = false;
     editor.update();
   },
+  /**
+   * Traverse the directory tree using the File System API, adding to the editor along the way.
+   * @method _traverse
+   * @private
+   */
   _traverse (entry, branch) {
     branch.firstElementChild.value = entry.name;
     let reader = entry.createReader();
@@ -418,13 +439,19 @@ const folder = {
           editor.addChild(branch).firstElementChild.value = item.name;
         }
       }
-    }, error => {
-      console.error(e);
-      if (e.code === 5) {
-        console.error('This app cannot be run from a local file system (url \'file://\'...)');
+    }, e => {
+      if (e.name === 'EncodingError') {
+        console.error('Folder drops do not work from a local file system (url \'file://\'...). A live version can be found at https://tehvgg.github.io/document-tree-editor/');
+      } else {
+        console.error(e);
       }
     });
   },
+  /**
+   * Modify the visual state of the dropzone.
+   * @method _toggleHover
+   * @private
+   */
   _toggleHover (event) {
     !event.defaultPrevented && event.preventDefault();
   	this.dropzone.className = event.type === 'dragover' ? 'active' : '';

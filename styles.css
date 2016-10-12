@@ -124,12 +124,11 @@ a {
 }
 
 .moving {
-  border: 1px solid blue;
+  border: 2px solid red;
 }
 
-#editor input.move-destination {
-  border: none;
-  border-bottom: 1px solid lightblue;
+.move-destination {
+  border-bottom: 2px solid red;
 }
 
 #editor li:last-child {
