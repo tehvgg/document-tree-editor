@@ -97,7 +97,6 @@ a {
 #options ul {
   list-style-type: none;
   position: relative;
-  text-align: center;
 }
 
 #options li {
@@ -110,6 +109,11 @@ a {
   position: absolute;
   font-size: 12px;
   top: -12px;
+}
+
+#options input {
+  text-align: center;
+  font-family: monospace;
 }
 
 #editor {

@@ -81,7 +81,7 @@ const prefix = {
    */
   watch () {
     for (let name in this.els) {
-      this.els[name].addEventListener('input', proxy(this._handleChange, this));
+      this.els[name].addEventListener('change', proxy(this._handleChange, this));
     }
   },
   /**
@@ -125,7 +125,8 @@ const editor = {
    * @return {Array}.
    */
   get allInputs () {
-    return nodeListToArray(this.el.querySelector('input'));
+    let inputs = this.el.querySelectorAll('input');
+    return nodeListToArray(inputs);
   },
   /**
    * Initialize the editor.
