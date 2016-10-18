@@ -10,40 +10,63 @@
 
  *************************************************************************/
 
- /**
-  * Getters return new HTML elements for injection into the editor.
-  * @property newNode
-  */
- const newNode = {
-   get ul () {
-     return document.createElement('ul');
-   },
-   get li () {
-     return document.createElement('li');
-   },
-   get input () {
-     let el = document.createElement('input');
-     el.type = 'text'; el.placeholder = 'Directory or File Name';
-     return el;
-   }
- };
+/**
+ * Getters return new HTML elements for injection into the editor.
+ * @property newNode
+ */
+const newNode = {
+  get ul () {
+    return document.createElement('ul');
+  },
+  get li () {
+    return document.createElement('li');
+  },
+  get input () {
+    let el = document.createElement('input');
+    el.type = 'text'; el.placeholder = 'Directory or File Name';
+    return el;
+  }
+};
 
- /**
-  * Converts a NodeList to an Array and returns it.
-  * @method nodeListToArray
-  * @returns Array
-  */
- function nodeListToArray (list) {
-   return Array.prototype.slice.call(list);
- }
+/**
+ * Folders or Files on the blacklist are not rendered, usually due to performance issues.
+ * @property blacklist
+ */
+const blacklist = [
+  '.git',
+  'node_modules',
+  '.idea',
+  '.DS_Store'
+];
+
+function escapeRegex (str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+function itemOnBlacklist (item) {
+  for (let i = 0, l = blacklist.length; i < l; i++) {
+    let regex = new RegExp(`.*${escapeRegex(blacklist[i])}.*`, 'i');
+    if (regex.test(item)) { return true; }
+  }
+  return false;
+}
+
+/**
+ * Converts a NodeList to an Array and returns it.
+ * @method nodeListToArray
+ * @returns Array
+ */
+function nodeListToArray (list) {
+  return Array.prototype.slice.call(list);
+}
 
 /**
  * Shorthand for binding scope to a function.
  * @return {Function}
  */
- function proxy (func, scope) {
-   return func.bind(scope);
- }
+function proxy (func, scope) {
+  return func.bind(scope);
+}
 
  /*************************************************************************
 
@@ -366,6 +389,7 @@ const editor = {
     for (let i = 0, l = items.length; i < l; i++) {
       let last = i === l - 1;
       let activeItem = items[i];
+      if (itemOnBlacklist(activeItem.value)) { continue; }
       processor(activeItem, spacers.join('') + (last ? prefix.branch_last : prefix.branch));
       let nextList = activeItem.lastElementChild;
       if (nextList.tagName === 'UL') {
