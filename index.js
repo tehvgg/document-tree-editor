@@ -389,7 +389,6 @@ const editor = {
     for (let i = 0, l = items.length; i < l; i++) {
       let last = i === l - 1;
       let activeItem = items[i];
-      if (itemOnBlacklist(activeItem.value)) { continue; }
       processor(activeItem, spacers.join('') + (last ? prefix.branch_last : prefix.branch));
       let nextList = activeItem.lastElementChild;
       if (nextList.tagName === 'UL') {
@@ -456,6 +455,7 @@ const folder = {
     reader.readEntries(entries => {
       for (let i = 0, l = entries.length; i < l; i++) {
         let item = entries[i];
+        if (itemOnBlacklist(item.name)) { continue; }
         if (item.isDirectory) {
           this._traverse(item, editor.addChild(branch));
         } else {
